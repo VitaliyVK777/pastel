@@ -267,7 +267,7 @@ void CMasternodeGovernance::ProcessMessage(CNode* pfrom, std::string& strCommand
     if (strCommand == NetMsgType::GOVERNANCESYNC) { //Governance Payments Request Sync
     
         //TODO: Fix governance tickets processing
-        return;
+        //return;
         
         // Ignore such requests until we are fully synced.
         // We could start processing this after masternode list is synced
@@ -291,7 +291,7 @@ void CMasternodeGovernance::ProcessMessage(CNode* pfrom, std::string& strCommand
     } else if (strCommand == NetMsgType::GOVERNANCE) { // Masternode Governance ticket
     
         //TODO: Fix governance tickets processing
-        return;
+        //return;
         
         CGovernanceTicket ticket;
         vRecv >> ticket;
@@ -323,7 +323,7 @@ void CMasternodeGovernance::ProcessMessage(CNode* pfrom, std::string& strCommand
     } else if (strCommand == NetMsgType::GOVERNANCEVOTE) { // Masternode Governance ticket votes
     
         //TODO: Fix governance tickets processing
-        return;
+        //return;
         
         CGovernanceVote vote;
         vRecv >> vote;
@@ -613,7 +613,7 @@ bool CGovernanceVote::Sign()
     std::string strError;
     std::string strMessage = vinMasternode.prevout.ToStringShort() +
                 ticketId.ToString() +
-                boost::lexical_cast<std::string>(nVoteBlockHeight) +
+                //boost::lexical_cast<std::string>(nVoteBlockHeight) +
                 boost::lexical_cast<std::string>(bVote);
 
     LogPrintf("CGovernanceVote::Sign -- Vote to sign: %s (%s)\n", ToString(), strMessage);
@@ -638,7 +638,7 @@ bool CGovernanceVote::CheckSignature(const CPubKey& pubKeyMasternode, int stopVo
 
     std::string strMessage = vinMasternode.prevout.ToStringShort() +
                 ticketId.ToString() +
-                boost::lexical_cast<std::string>(nVoteBlockHeight) +
+                //boost::lexical_cast<std::string>(nVoteBlockHeight) +
                 boost::lexical_cast<std::string>(bVote);
 
     LogPrintf("CGovernanceVote::CheckSignature -- Vote to check: %s (%s)\n", ToString(), strMessage);
