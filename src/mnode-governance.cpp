@@ -27,7 +27,7 @@ CAmount CMasternodeGovernance::GetGovernancePaymentForHeight(int nHeight)
 
 CAmount CMasternodeGovernance::GetGovernancePayment(CAmount blockValue)
 {
-    CAmount ret = blockValue/20; // Always at 5% per CB
+    CAmount ret = blockValue/10; // Always at 5% per CB -> Freedcamp task:38980425 change from 5 % to 10%.
     return ret;
 }
 
@@ -452,7 +452,7 @@ void CMasternodeGovernance::CheckAndRemove()
         if (ticket.IsWinner(nCachedBlockHeight)) {
             //process winners
             if (ticket.nLastPaymentBlockHeight == 0) {
-                ticket.nFirstPaymentBlockHeight = max(lastScheduledPaymentBlock, nCachedBlockHeight)+1;
+                ticket.nFirstPaymentBlockHeight = max(lastScheduledPaymentBlock, ticket.nStopVoteBlockHeight)+10;
                 ticket.nLastPaymentBlockHeight = CalculateLastPaymentBlock(ticket.nAmountToPay, ticket.nFirstPaymentBlockHeight);
                 lastScheduledPaymentBlock = ticket.nLastPaymentBlockHeight;
                 mapPayments[lastScheduledPaymentBlock] = ticket.ticketId;
@@ -524,6 +524,7 @@ bool CGovernanceTicket::AddVote(CGovernanceVote& voteNew, std::string& strErrorR
 
     {
         LOCK(cs_ticketsVotes);
+
         if (mapVotes.count(voteNew.vchSig)) {
             strErrorRet = strprintf("signature already exists: MN has already voted for this ticket = %s", GetHash().ToString());
             LogPrintf("CGovernanceTicket::AddVote -- %s\n", strErrorRet);
@@ -612,9 +613,9 @@ bool CGovernanceVote::Sign()
 {
     std::string strError;
     std::string strMessage = vinMasternode.prevout.ToStringShort() +
-                ticketId.ToString() +
+                ticketId.ToString(); // +
                 //boost::lexical_cast<std::string>(nVoteBlockHeight) +
-                boost::lexical_cast<std::string>(bVote);
+                //boost::lexical_cast<std::string>(bVote);
 
     LogPrintf("CGovernanceVote::Sign -- Vote to sign: %s (%s)\n", ToString(), strMessage);
 
@@ -637,9 +638,9 @@ bool CGovernanceVote::CheckSignature(const CPubKey& pubKeyMasternode, int stopVo
     nDos = 0;
 
     std::string strMessage = vinMasternode.prevout.ToStringShort() +
-                ticketId.ToString() +
+                ticketId.ToString();// +
                 //boost::lexical_cast<std::string>(nVoteBlockHeight) +
-                boost::lexical_cast<std::string>(bVote);
+                //boost::lexical_cast<std::string>(bVote);
 
     LogPrintf("CGovernanceVote::CheckSignature -- Vote to check: %s (%s)\n", ToString(), strMessage);
 

@@ -55,8 +55,8 @@ public:
         CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
         ss << vinMasternode.prevout;
         ss << ticketId;
-        ss << nVoteBlockHeight;
-        ss << bVote;
+        //ss << nVoteBlockHeight;
+        //ss << bVote;
         return ss.GetHash();
     }
 
